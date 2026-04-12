@@ -4,6 +4,11 @@ urllib3>=2.0.0
 lxml>=5.1.0
 beautifulsoup4>=4.12.0
 
+# ML pipeline — Layer 2
+torch>=2.0.0
+transformers>=4.36.0
+scikit-learn>=1.4.0
+
 # Testing
 pytest>=8.0.0
 pytest-mock>=3.12.0

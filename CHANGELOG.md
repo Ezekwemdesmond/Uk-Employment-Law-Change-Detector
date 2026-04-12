@@ -9,6 +9,66 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.2.0] — 2026-04-12
+
+### Added — Layer 2: ML Classification Pipeline
+
+#### `src/data_builder.py`
+- `generate_examples(n_per_class, seed)` — generates synthetic labelled training
+  examples for material (class 1) and minor (class 0) changes using template-based
+  generation with realistic UK employment law language.
+- `examples_from_diff(diff, default_label)` — converts preprocessed diff objects
+  into example dicts ready for classification or labelling.
+- `save_dataset(examples, filename, output_dir)` — saves labelled examples to CSV
+  with columns: `text`, `label`, `change_type`, `act_name`.
+- `load_dataset(filepath)` — loads a labelled CSV back into memory.
+- `build_training_dataset(n_per_class, seed, output_dir)` — convenience function
+  to generate and save a complete training dataset.
+- **Material change templates:** new obligations, penalty changes, scope extensions,
+  new definitions, new exemptions (50 templates total).
+- **Minor change templates:** cross-references, punctuation fixes, hyperlink updates,
+  renumbering, formatting changes (50 templates total).
+
+#### `src/classifier.py`
+- `LegislationDataset` — PyTorch Dataset wrapper for tokenized examples.
+- `split_dataset(examples, ratios, seed)` — stratified 80/10/10 train/val/test split.
+- `compute_metrics(labels, predictions)` — calculates accuracy, precision, recall, F1.
+- `evaluate(model, dataloader, device)` — evaluates model on a dataset and returns
+  metrics and loss.
+- `train(dataset_path, config, output_dir)` — full fine-tuning loop:
+  - Loads `bert-base-uncased` from HuggingFace
+  - Uses AdamW optimizer with linear warmup scheduler
+  - Tracks validation metrics per epoch
+  - Saves best checkpoint to `models/best_model/`
+  - Logs training history to `outputs/training_log.json`
+- `load_model(model_path)` — loads a trained model and tokenizer.
+- **Default config:** batch_size=16, lr=2e-5, epochs=3, max_length=256.
+
+#### `src/scorer.py`
+- `Scorer` class — wraps a trained model for inference:
+  - `predict_single(text)` — returns probability scores and confidence flag.
+  - `predict_batch(texts)` — batch inference with configurable batch size.
+  - `predict_examples(examples)` — merges predictions into example dicts.
+  - `predict_diff(diff)` — scores all sections in a preprocessed diff object.
+- `save_predictions(predictions, filename, output_dir)` — saves results as JSON.
+- `score_diff(diff, model_path, save)` — convenience function for scoring diffs.
+- `score_texts(texts, model_path, save)` — convenience function for raw text scoring.
+- **Confidence threshold:** 0.75 — predictions below this are flagged for human review.
+
+#### Tests
+- `tests/test_data_builder.py` — 35 tests covering template filling, example
+  generation, diff conversion, CSV save/load roundtrips.
+- `tests/test_classifier.py` — 25 tests covering dataset wrapper, split logic,
+  metrics computation, and config validation.
+- `tests/test_scorer.py` — 30 tests covering Scorer initialization, single/batch
+  prediction, confidence flagging, and JSON output.
+
+#### Project scaffolding
+- `requirements.txt` — added `torch`, `transformers`, `scikit-learn`.
+- `data/labelled/` — output directory for generated training data.
+
+---
+
 ## [0.1.0] — 2026-04-12
 
 ### Added — Layer 1: Data Ingestion Pipeline
