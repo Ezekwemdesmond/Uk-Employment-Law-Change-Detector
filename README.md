@@ -2,6 +2,22 @@
 
 **Automated monitoring of UK employment legislation for material compliance changes affecting SMEs.**
 
+## About This Project
+
+UK employment legislation changes frequently. For large organisations with in-house legal departments, staying compliant is manageable. For the 5.5 million SMEs that make up 99.9% of UK businesses, it is not. A single missed change to unfair dismissal rules, minimum wage thresholds, or working time regulations can result in tribunal claims, financial penalties, and reputational damage.
+This is not a theoretical problem — the Employment Rights Act 2025 is currently being implemented in phases across 2026 and 2027, representing the most significant overhaul of UK employment law in a generation. SMEs have no automated way to know what has changed, what it means for them, and what they need to do about it.
+This project tackles that problem at the data and ML layer — automatically detecting, classifying, and structuring legislative changes into machine-readable compliance intelligence that any application can consume. It implements the end-to-end flow from raw legislation XML on legislation.gov.uk to a structured JSON output containing the domain, effective date, penalty threshold, affected business types, and obligation type of every material change detected. 
+
+Related project: [uk-reg-monitor](https://github.com/Ezekwemdesmond/uk-reg-monitor) — a Python package that uses this API to monitor legislation on a schedule and send notifications.
+
+### What this prototype demonstrates
+
+- **Real data integration** — direct connection to the UK Government's legislation.gov.uk API, parsing Crown Legislation Markup Language (CLML) XML
+- **ML-driven classification** — fine-tuned BERT model distinguishing material compliance changes from minor editorial amendments with confidence scoring
+- **Structured, actionable output** — each detected change is enriched with domain classification, effective dates, penalty thresholds, affected business types, and obligation categorisation
+- **Production-ready API design** — FastAPI endpoint with request validation, error handling, and a baseline-then-diff workflow suitable for scheduled monitoring
+- **Comprehensive test coverage** — 293 automated tests across all pipeline stages
+
 This project connects to the official [legislation.gov.uk](https://www.legislation.gov.uk/) REST API, fetches the current Crown Legislation Markup Language (CLML) XML for four key employment statutes, diffs it against a locally cached baseline, and uses a fine-tuned BERT classifier to separate material compliance changes (new duties, penalty increases, scope extensions) from minor editorial amendments (renumbering, cross-reference fixes, punctuation). The result is a structured JSON alert — complete with domain, effective date, penalty threshold, affected business types, and obligation type — that an SME compliance team can act on immediately, without needing to parse raw legislation.
 
 ---
@@ -309,16 +325,4 @@ Runs the full legislation monitoring pipeline.
 
 ---
 
-## About This Project
 
-UK employment legislation changes frequently. For large organisations with in-house legal departments, staying compliant is manageable. For the 5.5 million SMEs that make up 99.9% of UK businesses, it is not. A single missed change to unfair dismissal rules, minimum wage thresholds, or working time regulations can result in tribunal claims, financial penalties, and reputational damage.
-
-This project is a standalone prototype that tackles that problem at the data and ML layer — automatically detecting, classifying, and structuring legislative changes into actionable alerts that non-specialists can understand. It implements the end-to-end flow from raw legislation XML to structured compliance alerts.
-
-### What this prototype demonstrates
-
-- **Real data integration** — direct connection to the UK Government's legislation.gov.uk API, parsing Crown Legislation Markup Language (CLML) XML
-- **ML-driven classification** — fine-tuned BERT model distinguishing material compliance changes from minor editorial amendments with confidence scoring
-- **Structured, actionable output** — each detected change is enriched with domain classification, effective dates, penalty thresholds, affected business types, and obligation categorisation
-- **Production-ready API design** — FastAPI endpoint with request validation, error handling, and a baseline-then-diff workflow suitable for scheduled monitoring
-- **Comprehensive test coverage** — 293 automated tests across all pipeline stages
