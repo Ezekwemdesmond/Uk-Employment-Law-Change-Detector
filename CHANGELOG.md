@@ -9,6 +9,63 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.3.0] — 2026-04-12
+
+### Added — Layer 3: Structured JSON Output Pipeline & API
+
+#### `src/domain_classifier.py`
+- `classify_domain(act_name)` — maps canonical act names to compliance domains
+  (`employment`, `wage`, `equality`, `working_time`).
+- `classify_domain_from_url(url)` — infers domain from legislation.gov.uk URL path.
+- `classify_domain_from_text(text)` — keyword-based domain inference from free text.
+- `url_to_act_name(url)` — reverse-maps a URL to a canonical act name.
+
+#### `src/penalty_extractor.py`
+- `extract_penalty(text)` — regex-based extraction of monetary penalty thresholds;
+  recognises `£N,NNN`, per-day/per-week/per-employee qualifiers, and `unlimited`
+  penalty phrases; returns `None` when no threshold is found.
+- `extract_all_amounts(text)` — returns all monetary amounts found in text.
+
+#### `src/output_builder.py`
+- `extract_effective_date(text)` — extracts effective dates from contextual phrases
+  (`with effect from`, `commencing`, ISO dates, named-month dates).
+- `extract_affected_business_types(text)` — identifies affected business categories
+  via keyword matching; defaults to `["all employers"]`.
+- `infer_obligation_type(change_type, text)` — maps change type + text signals to
+  one of five obligation types: `new_duty`, `changed_duty`, `removed_duty`,
+  `changed_penalty`, `extended_scope`.
+- `build_material_record(prediction, act_name)` — constructs a single structured
+  output record with all five required fields.
+- `build_output(scored_result, min_confidence)` — filters to material predictions,
+  builds records for all, returns the full structured output dict.
+- `save_output(output, act_name, output_dir)` — persists output to timestamped JSON.
+
+#### `src/api.py` — FastAPI application
+- `GET /health` — service status and model-availability check.
+- `POST /analyse` — full pipeline endpoint:
+  1. Validates legislation.gov.uk URL.
+  2. Identifies act from URL.
+  3. Fetches current XML from legislation.gov.uk.
+  4. Compares against most recent cached baseline in `data/raw/`.
+  5. First call saves baseline and returns `pipeline_status="baseline_established"`.
+  6. Subsequent calls: diff → preprocess → BERT classify → build structured output.
+  7. Returns `pipeline_status` of `"changes_found"` or `"no_changes"`.
+- Returns `503` if no trained model is available, `502` on network failures.
+
+#### Tests
+- `tests/test_domain_classifier.py` — 22 tests covering all four mapping functions.
+- `tests/test_penalty_extractor.py` — 24 tests covering unlimited penalties,
+  monetary amounts, qualifiers, edge cases, and `extract_all_amounts`.
+- `tests/test_output_builder.py` — 35 tests covering date extraction, business-type
+  detection, obligation inference, record building, and JSON output.
+- `tests/test_api.py` — 20 tests covering health check, request validation, baseline
+  flow, network errors, model-unavailable 503, and full pipeline with mocked scorer.
+
+#### Project scaffolding
+- `requirements.txt` — added `fastapi`, `uvicorn`, `httpx`.
+
+---
+
 ## [0.2.0] — 2026-04-12
 
 ### Added — Layer 2: ML Classification Pipeline
