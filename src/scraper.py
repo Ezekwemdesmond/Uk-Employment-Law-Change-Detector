@@ -55,7 +55,7 @@ def build_session() -> requests.Session:
     session.headers.update(
         {
             "Accept": "application/xml",
-            "User-Agent": "complyAI-legislation-monitor/1.0 (portfolio project; contact via github)",
+            "User-Agent": "uk-law-change-detector/1.0 (portfolio project; contact via github)",
         }
     )
     return session

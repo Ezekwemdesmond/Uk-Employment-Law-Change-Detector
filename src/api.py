@@ -1,5 +1,5 @@
 """
-FastAPI application for the complyAI UK Employment Law Change Detector.
+FastAPI application for the UK Employment Law Change Detector.
 
 Exposes the full pipeline — scrape → diff → preprocess → classify → output —
 via a single POST /analyse endpoint.  A GET /health endpoint is also provided.
@@ -139,7 +139,7 @@ def _run_scorer(preprocessed: dict[str, Any]) -> dict[str, Any]:
 # ---------------------------------------------------------------------------
 
 app = FastAPI(
-    title="complyAI — UK Employment Law Change Detector",
+    title="UK Employment Law Change Detector",
     description=(
         "Monitors legislation.gov.uk for material changes to UK employment law "
         "and surfaces structured compliance alerts for SMEs."
@@ -157,7 +157,7 @@ def health() -> HealthResponse:
     """
     return HealthResponse(
         status="ok",
-        service="complyAI",
+        service="uk-employment-law-change-detector",
         model_available=_model_is_available(),
     )
 

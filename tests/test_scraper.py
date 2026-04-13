@@ -37,7 +37,7 @@ class TestBuildSession:
 
     def test_has_user_agent_header(self):
         session = build_session()
-        assert "complyAI" in session.headers.get("User-Agent", "")
+        assert "uk-law-change-detector" in session.headers.get("User-Agent", "")
 
     def test_https_adapter_mounted(self):
         session = build_session()

@@ -1,1 +1,1 @@
-# complyAI — UK Employment Law Change Detector
+# UK Employment Law Change Detector

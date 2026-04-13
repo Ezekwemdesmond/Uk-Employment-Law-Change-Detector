@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to complyAI — UK Employment Law Change Detector are documented here.
+All notable changes to the UK Employment Law Change Detector are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---

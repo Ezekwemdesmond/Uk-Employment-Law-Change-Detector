@@ -45,7 +45,7 @@ class TestHealthEndpoint:
 
     def test_health_service_name(self, client):
         response = client.get("/health")
-        assert response.json()["service"] == "complyAI"
+        assert response.json()["service"] == "uk-employment-law-change-detector"
 
     def test_health_has_model_available_field(self, client):
         response = client.get("/health")
