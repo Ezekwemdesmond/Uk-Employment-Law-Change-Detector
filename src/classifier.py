@@ -376,26 +376,37 @@ def train(
     return history
 
 
+HF_MODEL_NAME = "bert-base-uncased"
+HF_CACHE_DIR = MODELS_DIR / "hub"
+
+
 def load_model(
     model_path: Path | str | None = None,
 ) -> tuple[BertForSequenceClassification, BertTokenizer]:
     """
-    Load a trained model and tokenizer.
+    Load bert-base-uncased from HuggingFace, caching weights locally.
+
+    On first call the weights are downloaded from HuggingFace Hub and stored
+    in ``models/hub/``.  Subsequent calls are served entirely from that local
+    cache with no network access required.
 
     Args:
-        model_path: Path to saved model directory. Defaults to models/best_model.
+        model_path: Unused.  Kept for call-site compatibility; the model is
+            always sourced from HuggingFace (``bert-base-uncased``).
 
     Returns:
         Tuple of (model, tokenizer).
     """
-    if model_path is None:
-        model_path = MODELS_DIR / "best_model"
-    model_path = Path(model_path)
+    HF_CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
-    tokenizer = BertTokenizer.from_pretrained(model_path)
-    model = BertForSequenceClassification.from_pretrained(model_path)
+    tokenizer = BertTokenizer.from_pretrained(HF_MODEL_NAME, cache_dir=HF_CACHE_DIR)
+    model = BertForSequenceClassification.from_pretrained(
+        HF_MODEL_NAME,
+        num_labels=2,
+        cache_dir=HF_CACHE_DIR,
+    )
 
-    logger.info("Loaded model from %s", model_path)
+    logger.info("Loaded %s (cache: %s)", HF_MODEL_NAME, HF_CACHE_DIR)
     return model, tokenizer
 
 

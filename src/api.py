@@ -34,7 +34,7 @@ from src.scraper import build_session, fetch_legislation_xml, save_xml
 logger = logging.getLogger(__name__)
 
 DATA_RAW_DIR = Path(__file__).parent.parent / "data" / "raw"
-MODELS_DIR = Path(__file__).parent.parent / "models" / "best_model"
+MODELS_DIR = Path(__file__).parent.parent / "models"
 
 # ---------------------------------------------------------------------------
 # Pydantic schemas
@@ -101,9 +101,10 @@ def _find_latest_cached_xml(act_name: str, raw_dir: Path) -> Path | None:
     return matches[0] if matches else None
 
 
-def _model_is_available(models_dir: Path = MODELS_DIR) -> bool:
-    """Return True if a trained model checkpoint exists."""
-    return (models_dir / "config.json").exists()
+def _model_is_available() -> bool:
+    """Return True if the HuggingFace model cache has been downloaded locally."""
+    hub_dir = MODELS_DIR / "hub"
+    return hub_dir.exists() and any(hub_dir.iterdir())
 
 
 def _run_scorer(preprocessed: dict[str, Any]) -> dict[str, Any]:
@@ -123,8 +124,8 @@ def _run_scorer(preprocessed: dict[str, Any]) -> dict[str, Any]:
     """
     if not _model_is_available():
         raise RuntimeError(
-            "No trained model found at models/best_model. "
-            "Run the classifier training step first."
+            "HuggingFace model cache not found. "
+            "The model will be downloaded automatically on the first /analyse request."
         )
 
     # Import lazily to keep startup fast when model is not needed
