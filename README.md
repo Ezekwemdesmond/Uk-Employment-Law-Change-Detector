@@ -10,6 +10,24 @@ This project tackles that problem at the data and ML layer — automatically det
 
 Related project: [uk-reg-monitor](https://github.com/Ezekwemdesmond/uk-reg-monitor) — a Python package that uses this API to monitor legislation on a schedule and send notifications.
 
+---
+
+## Live API
+
+The API is live and publicly accessible at:
+
+**https://uk-employment-law-change-detector.onrender.com**
+
+| | Endpoint |
+|---|---|
+| Health check | `GET` https://uk-employment-law-change-detector.onrender.com/health |
+| Interactive docs | https://uk-employment-law-change-detector.onrender.com/docs |
+| Analyse endpoint | `POST` https://uk-employment-law-change-detector.onrender.com/analyse |
+
+> **Note:** Render free-tier instances spin down after inactivity. The first request may take 30–60 seconds to respond while the service wakes up.
+
+---
+
 ### What this prototype demonstrates
 
 - **Real data integration** — direct connection to the UK Government's legislation.gov.uk API, parsing Crown Legislation Markup Language (CLML) XML

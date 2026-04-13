@@ -9,6 +9,35 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.4.0] — 2026-04-13
+
+### Added — Render deployment & HuggingFace model loading
+
+#### Deployment
+- `render.yaml` — Render web service config: Python 3.12.7, `pip install -r requirements.txt`
+  build command, `uvicorn src.api:app --host 0.0.0.0 --port $PORT` start command.
+- `Procfile` — Heroku-compatible process declaration for `uvicorn` (also read by Render).
+- API deployed and publicly accessible at
+  `https://uk-employment-law-change-detector.onrender.com`.
+
+#### `src/classifier.py`
+- `load_model()` now loads `bert-base-uncased` directly from HuggingFace Hub instead of
+  from a local `models/best_model/` checkpoint. Weights are downloaded on first call and
+  cached in `models/hub/`; subsequent calls are served entirely from the local cache.
+- Added module-level constants `HF_MODEL_NAME` and `HF_CACHE_DIR`.
+
+#### `src/api.py`
+- `MODELS_DIR` updated to point at `models/` (root) rather than `models/best_model/`.
+- `_model_is_available()` now checks for a populated `models/hub/` HuggingFace cache
+  directory instead of a `config.json` fine-tuned checkpoint.
+- Updated `_run_scorer` error message to reflect automatic HuggingFace download behaviour.
+
+#### Documentation
+- `README.md` — added "Live API" section with the public Render URL, health-check,
+  interactive-docs, and analyse-endpoint links.
+
+---
+
 ## [0.3.0] — 2026-04-12
 
 ### Added — Layer 3: Structured JSON Output Pipeline & API
