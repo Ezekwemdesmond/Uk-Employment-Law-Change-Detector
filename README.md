@@ -312,8 +312,8 @@ Runs the full legislation monitoring pipeline.
 ## About This Project
 
 UK employment legislation changes frequently. For large organisations with in-house legal departments, staying compliant is manageable. For the 5.5 million SMEs that make up 99.9% of UK businesses, it is not. A single missed change to unfair dismissal rules, minimum wage thresholds, or working time regulations can result in tribunal claims, financial penalties, and reputational damage.
-
-This project is a standalone prototype that tackles that problem at the data and ML layer — automatically detecting, classifying, and structuring legislative changes into actionable alerts that non-specialists can understand. It implements the end-to-end flow from raw legislation XML to structured compliance alerts.
+This is not a theoretical problem — the Employment Rights Act 2025 is currently being implemented in phases across 2026 and 2027, representing the most significant overhaul of UK employment law in a generation. SMEs have no automated way to know what has changed, what it means for them, and what they need to do about it.
+This project tackles that problem at the data and ML layer — automatically detecting, classifying, and structuring legislative changes into machine-readable compliance intelligence that any application can consume. It implements the end-to-end flow from raw legislation XML on legislation.gov.uk to a structured JSON output containing the domain, effective date, penalty threshold, affected business types, and obligation type of every material change detected.
 
 ### What this prototype demonstrates
 
