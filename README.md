@@ -270,12 +270,14 @@ uk-employment-law-change-detector/
 |   |-- labelled/                   # Generated training datasets (CSV)
 |
 |-- models/
-|   |-- best_model/                 # Trained BERT checkpoint
+|   |-- hub/                        # HuggingFace model cache (auto-downloaded, gitignored)
 |
 |-- outputs/                        # JSON alerts and training logs
 |
 |-- requirements.txt                # Python dependencies
 |-- pytest.ini                      # Test runner configuration
+|-- render.yaml                     # Render deployment configuration
+|-- Procfile                        # Uvicorn process declaration
 |-- CHANGELOG.md                    # Version history
 |-- README.md                       # This file
 ```
